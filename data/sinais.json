@@ -1,0 +1,6 @@
+{
+  "nota": "Sinal mensal da Estratégia MARK. Cada mês: quartil do P/L agregado das grandes empresas da B3 (sem commodities, lucro médio de 3 anos) contra todo o histórico mensal desde 2012, e o peso em BOVA11 que ele define (Q1 100%, Q2 67%, Q3 33%, Q4 0%). O resto vai para o Tesouro Selic.",
+  "meses": {
+    "2026-10": {"calculado_em": "2026-10-01", "pl": 14.71, "limites": [14.32, 15.70, 17.42], "quartil": 2, "bova11": 0.6667, "selic": 0.3333}
+  }
+}

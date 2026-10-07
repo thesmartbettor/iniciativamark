@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Histórico simulado · Iniciativa MARK</title>
+<meta name="description" content="Como a Estratégia MARK teria se saído desde 2014 contra Tesouro Selic, Ibovespa e SMAL11, com IR e custos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="site-nav" aria-label="Páginas">
+  <a class="marca" href="./">Iniciativa <b>MARK</b></a>
+  <a class="lk" href="./">Início</a>
+  <a class="lk" href="estrategia.html">Como funciona</a>
+  <a class="lk" href="historico.html" aria-current="page">Histórico simulado</a>
+  <a class="lk" href="referencias.html">Referências</a>
+</nav>
+
+<header class="pg">
+  <div class="eyebrow">Histórico simulado (backtest)</div>
+  <h1>Como a MARK teria se saído desde 2014</h1>
+  <p class="meta" id="periodo"></p>
+</header>
+<div class="prose">
+<p class="lead">R$100 mil aplicados no mesmo dia na Estratégia MARK, no Tesouro Selic, no Ibovespa (via BOVA11) e no SMAL11, com corretagem, custódia e Imposto de Renda de pessoa física pagos ao longo do caminho.</p>
+<p class="callout" style="border-left-color:var(--warn)">Isto é uma simulação com dados do passado, não resultado real. A regra foi escolhida depois de testar variantes nos mesmos dados, então o passado tende a parecer melhor do que o futuro será. O resultado real começa em 01/11/2026, na <a href="./">página inicial</a>.</p>
+</div>
+<div class="kpis" id="kpis"></div>
+<div class="panel">
+  <h3 style="margin-top:0">Quanto viraram R$100 mil (valor a mercado)</h3>
+  <div class="toolbar"><span>Escala:</span><button class="chip" id="bLin" aria-pressed="true">linear</button><button class="chip" id="bLog" aria-pressed="false">log</button></div>
+  <div class="legend" id="legNav"></div>
+  <div class="chartbox"><canvas id="chNav" role="img" aria-label="Evolução de 100 mil reais"></canvas></div>
+</div>
+<div class="panel">
+  <h3 style="margin-top:0">Queda a partir do pico</h3>
+  <div class="legend" id="legDD"></div>
+  <div class="chartbox sm"><canvas id="chDD" role="img" aria-label="Queda a partir do pico"></canvas></div>
+</div>
+<h2>Resumo</h2>
+<div class="tscroll"><table id="tbRes"></table></div>
+<p class="meta" style="margin-top:8px">Retorno líquido: depois de vender tudo no fim e pagar o IR. Volatilidade: desvio padrão anualizado dos retornos mensais. Sharpe: retorno mensal acima do CDI dividido pela volatilidade, anualizado (não aparece para o Tesouro Selic, cuja volatilidade é quase zero).</p>
+<h2>Ano a ano</h2>
+<p class="meta prose">Retorno de cada ano a mercado. Verde: acima do Tesouro Selic do mesmo ano; vermelho: abaixo. O primeiro ano começa em setembro e o último vai até a data mais recente.</p>
+<div class="tscroll"><table id="tbAno"></table></div>
+<footer>
+  <span>Iniciativa MARK · estudo heurístico, não é recomendação de investimento. Nenhum participante do projeto tem certificação para recomendar investimentos.</span>
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="assets/comum.js"></script>
+<script>
+const ORD = ["MARK","Tesouro Selic","Ibovespa (BOVA11)","SMAL11"];
+carregar("data/historico.json").then(H => {
+  document.getElementById("periodo").textContent = "De " + dataBR(H.inicio) + " a " + dataBR(H.fim) + " · R$100 mil em cada carteira · valores depois de custos e IR";
+  const M = H.metricas;
+  document.getElementById("kpis").innerHTML = ORD.map(n => '<div class="kpi"><span class="nome"><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</span><b>'+reais(M[n].final_liquido)+'</b><span>'+pct(M[n].retorno_aa_liquido)+' ao ano · pior queda '+pct(M[n].max_queda)+'</span></div>').join("");
+  const lbl = H.nav.datas;
+  const nav = new Chart(document.getElementById("chNav"), {type:"line",
+    data:{labels:lbl, datasets:ORD.map(n => ({label:n, data:H.nav.series[n], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?3:2}))},
+    options:{scales:{x:{ticks:{callback:(v,i)=>lbl[i].slice(0,4), maxTicksLimit:12, autoSkip:true}, grid:{display:false}}, y:{type:"linear", ticks:{callback:v=>reais(v)}}},
+      plugins:{tooltip:{callbacks:{title:it=>dataBR(it[0].label), label:c=>c.dataset.label+": "+reais(c.parsed.y)}}}}});
+  legenda(document.getElementById("legNav"), nav, ORD);
+  const esc = t => { nav.options.scales.y.type = t; nav.update(); document.getElementById("bLin").setAttribute("aria-pressed", String(t==="linear")); document.getElementById("bLog").setAttribute("aria-pressed", String(t==="logarithmic")); };
+  document.getElementById("bLin").onclick = () => esc("linear"); document.getElementById("bLog").onclick = () => esc("logarithmic");
+  const dd = new Chart(document.getElementById("chDD"), {type:"line",
+    data:{labels:H.dd.datas, datasets:ORD.filter(n=>n!=="Tesouro Selic").map(n => ({label:n, data:H.dd.series[n], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?2.5:1.5}))},
+    options:{scales:{x:{ticks:{callback:(v,i)=>H.dd.datas[i].slice(0,4), maxTicksLimit:12}, grid:{display:false}}, y:{max:0, ticks:{callback:v=>v+"%"}}},
+      plugins:{tooltip:{callbacks:{title:it=>dataBR(it[0].label), label:c=>c.dataset.label+": "+c.parsed.y.toLocaleString("pt-BR")+"%"}}}}});
+  legenda(document.getElementById("legDD"), dd, ORD.filter(n=>n!=="Tesouro Selic"));
+  document.getElementById("tbRes").innerHTML = '<thead><tr><th>Carteira</th><th>Valor final líquido</th><th>Retorno ao ano</th><th>Volatilidade</th><th>Pior queda</th><th>Sharpe</th><th>IR pago</th></tr></thead><tbody>' +
+    ORD.map(n => { const m = M[n]; return '<tr><td><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</td><td>'+reais(m.final_liquido)+'</td><td>'+pct(m.retorno_aa_liquido)+'</td><td>'+pct(m.vol_aa)+'</td><td>'+pct(m.max_queda)+'</td><td>'+(n==="Tesouro Selic"?"–":m.sharpe.toLocaleString("pt-BR",{maximumFractionDigits:2}))+'</td><td>'+reais(m.ir_pago)+'</td></tr>'; }).join("") + '</tbody>';
+  const A = H.anos, sel = A.series["Tesouro Selic"];
+  document.getElementById("tbAno").innerHTML = '<thead><tr><th>Ano</th>' + ORD.map(n=>'<th>'+n+'</th>').join("") + '</tr></thead><tbody>' +
+    A.anos.map((a,i) => '<tr><td>'+a+'</td>' + ORD.map(n => { const x = A.series[n][i]; const c = n==="Tesouro Selic" ? "" : (x>=sel[i]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>').join("") + '</tbody>';
+});
+</script>
+</body>
+</html>
