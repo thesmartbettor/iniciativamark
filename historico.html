@@ -14,10 +14,16 @@
 <nav class="site-nav" aria-label="Páginas">
   <a class="marca" href="./">Iniciativa <b>MARK</b></a>
   <a class="lk" href="./">Início</a>
-  <a class="lk" href="estrategia.html">Como funciona</a>
+  <a class="lk" href="metodo.html">O Método</a>
   <a class="lk" href="historico.html" aria-current="page">Histórico simulado</a>
   <a class="lk" href="referencias.html">Referências</a>
 </nav>
+
+<section class="aviso" aria-label="Aviso importante">
+  <strong>Aviso importante</strong>
+  <p>Os resultados desta página são <b>simulados</b>: mostram como a regra da MARK teria se comportado com os preços do passado, e não o resultado de dinheiro investido de verdade.</p>
+  <p><b>Retornos passados, reais ou simulados, não são garantia de retornos futuros.</b> A regra foi escolhida depois de testar outras variantes nos mesmos dados, então o passado tende a parecer melhor do que o futuro será. Nada nesta página é recomendação de investimento.</p>
+</section>
 
 <header class="pg">
   <div class="eyebrow">Histórico simulado (backtest)</div>
@@ -25,27 +31,49 @@
   <p class="meta" id="periodo"></p>
 </header>
 <div class="prose">
-<p class="lead">R$100 mil aplicados no mesmo dia na Estratégia MARK, no Tesouro Selic, no Ibovespa (via BOVA11) e no SMAL11, com corretagem, custódia e Imposto de Renda de pessoa física pagos ao longo do caminho.</p>
-<p class="callout" style="border-left-color:var(--warn)">Isto é uma simulação com dados do passado, não resultado real. A regra foi escolhida depois de testar variantes nos mesmos dados, então o passado tende a parecer melhor do que o futuro será. O resultado real começa em 01/11/2026, na <a href="./">página inicial</a>.</p>
+<p class="lead">R$100 mil aplicados no mesmo dia na Estratégia MARK, no Tesouro Selic, no Ibovespa (via BOVA11) e no SMAL11, com corretagem, custódia e Imposto de Renda de pessoa física pagos ao longo do caminho. O resultado real começa em 01/11/2026, na <a href="./">página inicial</a>.</p>
 </div>
+
+<div class="panel filtro">
+  <h3 style="margin-top:0">Escolha o período</h3>
+  <div class="filtro-campos">
+    <label>De <input type="date" id="fIni"></label>
+    <label>Até <input type="date" id="fFim"></label>
+    <label>Valor inicial <input type="text" inputmode="numeric" id="fCap" value="100.000"></label>
+  </div>
+  <div class="toolbar" style="margin:10px 0 0" id="atalhos">
+    <span>Atalhos:</span>
+    <button class="chip" data-anos="0" aria-pressed="true">tudo</button>
+    <button class="chip" data-anos="10" aria-pressed="false">10 anos</button>
+    <button class="chip" data-anos="5" aria-pressed="false">5 anos</button>
+    <button class="chip" data-anos="3" aria-pressed="false">3 anos</button>
+    <button class="chip" data-anos="1" aria-pressed="false">1 ano</button>
+  </div>
+  <p class="meta" id="fInfo" style="margin:10px 0 0"></p>
+</div>
+
 <div class="kpis" id="kpis"></div>
 <div class="panel">
-  <h3 style="margin-top:0">Quanto viraram R$100 mil (valor a mercado)</h3>
+  <h3 style="margin-top:0" id="tNav">Quanto virou o valor inicial (valor a mercado)</h3>
   <div class="toolbar"><span>Escala:</span><button class="chip" id="bLin" aria-pressed="true">linear</button><button class="chip" id="bLog" aria-pressed="false">log</button></div>
   <div class="legend" id="legNav"></div>
-  <div class="chartbox"><canvas id="chNav" role="img" aria-label="Evolução de 100 mil reais"></canvas></div>
+  <div class="chartbox"><canvas id="chNav" role="img" aria-label="Evolução do valor inicial"></canvas></div>
 </div>
 <div class="panel">
   <h3 style="margin-top:0">Queda a partir do pico</h3>
   <div class="legend" id="legDD"></div>
   <div class="chartbox sm"><canvas id="chDD" role="img" aria-label="Queda a partir do pico"></canvas></div>
 </div>
-<h2>Resumo</h2>
-<div class="tscroll"><table id="tbRes"></table></div>
-<p class="meta" style="margin-top:8px">Retorno líquido: depois de vender tudo no fim e pagar o IR. Volatilidade: desvio padrão anualizado dos retornos mensais. Sharpe: retorno mensal acima do CDI dividido pela volatilidade, anualizado (não aparece para o Tesouro Selic, cuja volatilidade é quase zero).</p>
+<h2>Resumo do período escolhido</h2>
+<div class="tscroll"><table id="tbPer"></table></div>
+<p class="meta" style="margin-top:8px">Valor a mercado na data final, sem vender nada: o IR e os custos dos rebalanceamentos já estão descontados, mas não o IR que seria pago numa venda final. Volatilidade: desvio padrão anualizado dos retornos diários. Pior queda: maior queda de um pico até um fundo dentro do período.</p>
 <h2>Ano a ano</h2>
-<p class="meta prose">Retorno de cada ano a mercado. Verde: acima do Tesouro Selic do mesmo ano; vermelho: abaixo. O primeiro ano começa em setembro e o último vai até a data mais recente.</p>
+<p class="meta prose">Retorno de cada ano dentro do período escolhido. Verde: acima do Tesouro Selic do mesmo ano; vermelho: abaixo. O primeiro e o último ano podem estar incompletos.</p>
 <div class="tscroll"><table id="tbAno"></table></div>
+<h2>Período completo, depois do IR</h2>
+<p class="meta prose" id="perFull"></p>
+<div class="tscroll"><table id="tbRes"></table></div>
+<p class="meta" style="margin-top:8px">Valor final líquido: depois de vender tudo no fim e pagar o IR. Sharpe: retorno mensal acima do CDI dividido pela volatilidade, anualizado (não aparece para o Tesouro Selic, cuja volatilidade é quase zero).</p>
 <footer>
   <span>Iniciativa MARK · estudo heurístico, não é recomendação de investimento. Nenhum participante do projeto tem certificação para recomendar investimentos.</span>
 </footer>
@@ -55,28 +83,82 @@
 <script src="assets/comum.js"></script>
 <script>
 const ORD = ["MARK","Tesouro Selic","Ibovespa (BOVA11)","SMAL11"];
+const pf = x => x.toLocaleString("pt-BR",{maximumFractionDigits:2});
 carregar("data/historico.json").then(H => {
-  document.getElementById("periodo").textContent = "De " + dataBR(H.inicio) + " a " + dataBR(H.fim) + " · R$100 mil em cada carteira · valores depois de custos e IR";
-  const M = H.metricas;
-  document.getElementById("kpis").innerHTML = ORD.map(n => '<div class="kpi"><span class="nome"><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</span><b>'+reais(M[n].final_liquido)+'</b><span>'+pct(M[n].retorno_aa_liquido)+' ao ano · pior queda '+pct(M[n].max_queda)+'</span></div>').join("");
-  const lbl = H.nav.datas;
-  const nav = new Chart(document.getElementById("chNav"), {type:"line",
-    data:{labels:lbl, datasets:ORD.map(n => ({label:n, data:H.nav.series[n], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?3:2}))},
-    options:{scales:{x:{ticks:{callback:(v,i)=>lbl[i].slice(0,4), maxTicksLimit:12, autoSkip:true}, grid:{display:false}}, y:{type:"linear", ticks:{callback:v=>reais(v)}}},
+  const D = H.nav_d, N = D.datas.length, d0 = D.datas[0], d1 = D.datas[N-1];
+  const fIni = document.getElementById("fIni"), fFim = document.getElementById("fFim"), fCap = document.getElementById("fCap");
+  fIni.min = fFim.min = d0; fIni.max = fFim.max = d1; fIni.value = d0; fFim.value = d1;
+  document.getElementById("periodo").textContent = "Dados de " + dataBR(d0) + " a " + dataBR(d1) + " · valores depois de custos e IR";
+
+  // gráficos (criados uma vez, atualizados a cada filtro)
+  const nav = new Chart(document.getElementById("chNav"), {type:"line", data:{labels:[], datasets:ORD.map(n => ({label:n, data:[], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?2.5:1.5}))},
+    options:{scales:{x:{ticks:{maxTicksLimit:10, autoSkip:true}, grid:{display:false}}, y:{type:"linear", ticks:{callback:v=>reais(v)}}},
       plugins:{tooltip:{callbacks:{title:it=>dataBR(it[0].label), label:c=>c.dataset.label+": "+reais(c.parsed.y)}}}}});
+  nav.options.scales.x.ticks.callback = function(v){ const l = this.getLabelForValue(v); return l ? dataBR(l).slice(3) : ""; };
   legenda(document.getElementById("legNav"), nav, ORD);
   const esc = t => { nav.options.scales.y.type = t; nav.update(); document.getElementById("bLin").setAttribute("aria-pressed", String(t==="linear")); document.getElementById("bLog").setAttribute("aria-pressed", String(t==="logarithmic")); };
   document.getElementById("bLin").onclick = () => esc("linear"); document.getElementById("bLog").onclick = () => esc("logarithmic");
-  const dd = new Chart(document.getElementById("chDD"), {type:"line",
-    data:{labels:H.dd.datas, datasets:ORD.filter(n=>n!=="Tesouro Selic").map(n => ({label:n, data:H.dd.series[n], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?2.5:1.5}))},
-    options:{scales:{x:{ticks:{callback:(v,i)=>H.dd.datas[i].slice(0,4), maxTicksLimit:12}, grid:{display:false}}, y:{max:0, ticks:{callback:v=>v+"%"}}},
-      plugins:{tooltip:{callbacks:{title:it=>dataBR(it[0].label), label:c=>c.dataset.label+": "+c.parsed.y.toLocaleString("pt-BR")+"%"}}}}});
-  legenda(document.getElementById("legDD"), dd, ORD.filter(n=>n!=="Tesouro Selic"));
+  const DDN = ORD.filter(n => n!=="Tesouro Selic");
+  const dd = new Chart(document.getElementById("chDD"), {type:"line", data:{labels:[], datasets:DDN.map(n => ({label:n, data:[], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?2:1.2}))},
+    options:{scales:{x:{ticks:{maxTicksLimit:10}, grid:{display:false}}, y:{max:0, ticks:{callback:v=>v+"%"}}},
+      plugins:{tooltip:{callbacks:{title:it=>dataBR(it[0].label), label:c=>c.dataset.label+": "+pf(c.parsed.y)+"%"}}}}});
+  dd.options.scales.x.ticks.callback = nav.options.scales.x.ticks.callback;
+  legenda(document.getElementById("legDD"), dd, DDN);
+
+  function capital(){ const v = +fCap.value.replace(/\D/g,""); return v > 0 ? v : 100000; }
+  function calcular(){
+    let ini = fIni.value || d0, fim = fFim.value || d1;
+    if (ini < d0) ini = d0; if (fim > d1) fim = d1;
+    if (ini > fim) [ini, fim] = [fim, ini];
+    let i0 = D.datas.findIndex(d => d >= ini), i1 = N-1; while (i1 > 0 && D.datas[i1] > fim) i1--;
+    if (i1 - i0 < 5) { document.getElementById("fInfo").textContent = "Escolha um período com pelo menos uma semana de pregões."; return; }
+    const C = capital(), datas = D.datas.slice(i0, i1+1), anos = (new Date(datas[datas.length-1]) - new Date(datas[0])) / 864e5 / 365.25;
+    document.getElementById("fInfo").textContent = "Período: " + dataBR(datas[0]) + " a " + dataBR(datas[datas.length-1]) + " (" + pf(anos) + (anos >= 0.99 && anos < 1.01 ? " ano, " : " anos, ") + datas.length + " pregões).";
+    document.getElementById("tNav").textContent = "Quanto viraram " + reais(C) + " (valor a mercado)";
+    const R = {};
+    ORD.forEach(n => {
+      const s = D.series[n].slice(i0, i1+1), base = s[0], v = s.map(x => C * x / base);
+      let pico = -Infinity, pior = 0; const ddv = v.map(x => { pico = Math.max(pico, x); const q = x/pico - 1; pior = Math.min(pior, q); return +(q*100).toFixed(2); });
+      const r = []; for (let k = 1; k < s.length; k++) r.push(s[k]/s[k-1] - 1);
+      const m = r.reduce((a,b)=>a+b,0)/r.length, vol = Math.sqrt(r.reduce((a,b)=>a+(b-m)**2,0)/(r.length-1) * 252);
+      const tot = v[v.length-1]/C - 1;
+      R[n] = {v, ddv, final:v[v.length-1], tot, aa: anos >= 0.99 && anos < 1.01 ? tot : (1+tot)**(1/anos) - 1, vol, pior};
+    });
+    nav.data.labels = datas; ORD.forEach((n,k) => nav.data.datasets[k].data = R[n].v.map(Math.round)); nav.update();
+    dd.data.labels = datas; DDN.forEach((n,k) => dd.data.datasets[k].data = R[n].ddv); dd.update();
+    const anual = anos >= 0.99;
+    document.getElementById("kpis").innerHTML = ORD.map(n => '<div class="kpi"><span class="nome"><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</span><b>'+reais(R[n].final)+'</b><span>'+(anual ? pct(R[n].aa)+' ao ano' : pp(R[n].tot*100)+' no período')+' · pior queda '+pct(R[n].pior)+'</span></div>').join("");
+    document.getElementById("tbPer").innerHTML = '<thead><tr><th>Carteira</th><th>Valor final a mercado</th><th>Retorno no período</th><th>Retorno ao ano</th><th>Volatilidade</th><th>Pior queda</th></tr></thead><tbody>' +
+      ORD.map(n => { const x = R[n]; return '<tr><td><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</td><td>'+reais(x.final)+'</td><td class="'+(x.tot>=0?"pos":"neg")+'">'+pp(x.tot*100)+'</td><td>'+(anual?pct(x.aa):"–")+'</td><td>'+pct(x.vol)+'</td><td>'+pct(x.pior)+'</td></tr>'; }).join("") + '</tbody>';
+    // ano a ano dentro do período
+    const linhas = []; let a0 = 0;
+    for (let k = 1; k <= datas.length; k++) {
+      if (k === datas.length || datas[k].slice(0,4) !== datas[k-1].slice(0,4)) {
+        const ano = datas[k-1].slice(0,4), ret = {};
+        ORD.forEach(n => ret[n] = (R[n].v[k-1] / R[n].v[a0] - 1) * 100);
+        linhas.push([ano, ret]); a0 = k-1;
+      }
+    }
+    document.getElementById("tbAno").innerHTML = '<thead><tr><th>Ano</th>' + ORD.map(n=>'<th>'+n+'</th>').join("") + '</tr></thead><tbody>' +
+      linhas.map(([ano, ret]) => '<tr><td>'+ano+'</td>' + ORD.map(n => { const x = ret[n], c = n==="Tesouro Selic" ? "" : (x>=ret["Tesouro Selic"]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>').join("") + '</tbody>';
+  }
+  function atalho(anos){
+    document.querySelectorAll("#atalhos .chip").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.anos === anos)));
+    fFim.value = d1;
+    if (!anos) fIni.value = d0; else { const t = new Date(d1); t.setFullYear(t.getFullYear() - anos); const s = t.toISOString().slice(0,10); fIni.value = s < d0 ? d0 : s; }
+    calcular();
+  }
+  document.querySelectorAll("#atalhos .chip").forEach(b => b.onclick = () => atalho(+b.dataset.anos));
+  const manual = () => { document.querySelectorAll("#atalhos .chip").forEach(b => b.setAttribute("aria-pressed","false")); calcular(); };
+  fIni.onchange = manual; fFim.onchange = manual;
+  fCap.onchange = () => { fCap.value = nf0.format(capital()); calcular(); };
+  calcular();
+
+  // período completo com IR (motor completo, não muda com o filtro)
+  const M = H.metricas;
+  document.getElementById("perFull").textContent = "De " + dataBR(H.inicio) + " a " + dataBR(H.fim) + ", R$100 mil em cada carteira, vendendo tudo no fim e pagando o IR.";
   document.getElementById("tbRes").innerHTML = '<thead><tr><th>Carteira</th><th>Valor final líquido</th><th>Retorno ao ano</th><th>Volatilidade</th><th>Pior queda</th><th>Sharpe</th><th>IR pago</th></tr></thead><tbody>' +
     ORD.map(n => { const m = M[n]; return '<tr><td><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</td><td>'+reais(m.final_liquido)+'</td><td>'+pct(m.retorno_aa_liquido)+'</td><td>'+pct(m.vol_aa)+'</td><td>'+pct(m.max_queda)+'</td><td>'+(n==="Tesouro Selic"?"–":m.sharpe.toLocaleString("pt-BR",{maximumFractionDigits:2}))+'</td><td>'+reais(m.ir_pago)+'</td></tr>'; }).join("") + '</tbody>';
-  const A = H.anos, sel = A.series["Tesouro Selic"];
-  document.getElementById("tbAno").innerHTML = '<thead><tr><th>Ano</th>' + ORD.map(n=>'<th>'+n+'</th>').join("") + '</tr></thead><tbody>' +
-    A.anos.map((a,i) => '<tr><td>'+a+'</td>' + ORD.map(n => { const x = A.series[n][i]; const c = n==="Tesouro Selic" ? "" : (x>=sel[i]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>').join("") + '</tbody>';
 });
 </script>
 </body>
