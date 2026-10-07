@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Histórico simulado · Iniciativa MARK</title>
-<meta name="description" content="Como a Estratégia MARK teria se saído desde 2014 contra Tesouro Selic, Ibovespa e SMAL11, com IR e custos.">
+<meta name="description" content="Como a Estratégia MARK teria se saído desde 2014 contra Tesouro Selic, Ibovespa e SMAL11, com estimativas de IR e custos.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
@@ -14,6 +14,7 @@
 <nav class="site-nav" aria-label="Páginas">
   <a class="marca" href="./">Iniciativa <b>MARK</b></a>
   <a class="lk" href="./">Início</a>
+  <a class="lk" href="como-investir.html">Como investir</a>
   <a class="lk" href="metodo.html">O Método</a>
   <a class="lk" href="historico.html" aria-current="page">Histórico simulado</a>
   <a class="lk" href="referencias.html">Referências</a>
@@ -31,7 +32,7 @@
   <p class="meta" id="periodo"></p>
 </header>
 <div class="prose">
-<p class="lead">R$100 mil aplicados no mesmo dia na Estratégia MARK, no Tesouro Selic, no Ibovespa (via BOVA11) e no SMAL11, com corretagem, custódia e Imposto de Renda de pessoa física pagos ao longo do caminho. O resultado real começa em 01/11/2026, na <a href="./">página inicial</a>.</p>
+<p class="lead">R$100 mil aplicados no mesmo dia na Estratégia MARK, no Tesouro Selic, no Ibovespa (via BOVA11) e no SMAL11, descontando ao longo do caminho <b>estimativas</b> de custos de negociação, custódia e Imposto de Renda de pessoa física (veja como foram estimados no fim da página). O resultado real começa em 01/11/2026, na <a href="./">página inicial</a>.</p>
 </div>
 
 <div class="panel filtro">
@@ -66,17 +67,27 @@
 </div>
 <h2>Resumo do período escolhido</h2>
 <div class="tscroll"><table id="tbPer"></table></div>
-<p class="meta" style="margin-top:8px">Valor a mercado na data final, sem vender nada: o IR e os custos dos rebalanceamentos já estão descontados, mas não o IR que seria pago numa venda final. Volatilidade: desvio padrão anualizado dos retornos diários. Pior queda: maior queda de um pico até um fundo dentro do período.</p>
+<p class="meta" style="margin-top:8px">Valor a mercado na data final, sem vender nada: as estimativas de IR e custos dos rebalanceamentos já estão descontadas, mas não o IR que seria pago numa venda final. Volatilidade: desvio padrão anualizado dos retornos diários. Pior queda: maior queda de um pico até um fundo dentro do período.</p>
 <h2>Ano a ano</h2>
 <p class="meta prose">Retorno de cada ano dentro do período escolhido. Verde: acima do Tesouro Selic do mesmo ano; vermelho: abaixo. O primeiro e o último ano podem estar incompletos.</p>
 <div class="tscroll"><table id="tbAno"></table></div>
 <h2>Mês a mês</h2>
 <p class="meta prose">Alocação que a MARK calculou no 1º pregão de cada mês e o retorno de cada carteira naquele mês, dentro do período escolhido. Mais recente primeiro.</p>
 <div class="tscroll" style="max-height:560px;overflow-y:auto"><table id="tbMes"></table></div>
-<h2>Período completo, depois do IR</h2>
+<h2>Período completo, depois do IR estimado</h2>
 <p class="meta prose" id="perFull"></p>
 <div class="tscroll"><table id="tbRes"></table></div>
-<p class="meta" style="margin-top:8px">Valor final líquido: depois de vender tudo no fim e pagar o IR. Sharpe: retorno mensal acima do CDI dividido pela volatilidade, anualizado (não aparece para o Tesouro Selic, cuja volatilidade é quase zero).</p>
+<p class="meta" style="margin-top:8px">Valor final líquido: depois de vender tudo no fim e pagar o IR estimado. Sharpe: retorno mensal acima do CDI dividido pela volatilidade, anualizado (não aparece para o Tesouro Selic, cuja volatilidade é quase zero).</p>
+<h2>Como os custos e impostos foram estimados</h2>
+<div class="prose">
+<p>Custos e impostos reais dependem da corretora, das taxas da B3 em cada época e da situação de cada investidor. Por isso o histórico simulado usa <b>estimativas</b>, que podem ser diferentes do que cada pessoa pagaria de verdade:</p>
+<ul style="padding-left:22px;display:grid;gap:6px">
+  <li><b>Negociação do BOVA11:</b> 0,10% do valor em cada compra e em cada venda, cobrindo emolumentos da B3 e a diferença entre preço de compra e de venda. A simulação supõe corretagem zero.</li>
+  <li><b>Custódia do Tesouro Selic:</b> 0,20% ao ano, a taxa da B3, descontada todo dia.</li>
+  <li><b>IR do BOVA11:</b> 15% sobre o lucro de cada venda, com prejuízos compensados nas vendas seguintes (ETFs de ações não têm a isenção de R$20 mil por mês).</li>
+  <li><b>IR do Tesouro Selic:</b> tabela regressiva, de 22,5% (até 6 meses) a 15% (mais de 2 anos), sobre o rendimento de cada resgate.</li>
+</ul>
+</div>
 <footer>
   <span>Iniciativa MARK · estudo heurístico, não é recomendação de investimento. Nenhum participante do projeto tem certificação para recomendar investimentos.</span>
 </footer>
@@ -91,7 +102,7 @@ carregar("data/historico.json").then(H => {
   const D = H.nav_d, N = D.datas.length, d0 = D.datas[0], d1 = D.datas[N-1];
   const fIni = document.getElementById("fIni"), fFim = document.getElementById("fFim"), fCap = document.getElementById("fCap");
   fIni.min = fFim.min = d0; fIni.max = fFim.max = d1; fIni.value = d0; fFim.value = d1;
-  document.getElementById("periodo").textContent = "Dados de " + dataBR(d0) + " a " + dataBR(d1) + " · valores depois de custos e IR";
+  document.getElementById("periodo").textContent = "Dados de " + dataBR(d0) + " a " + dataBR(d1) + " · valores depois de estimativas de custos e IR";
 
   // gráficos (criados uma vez, atualizados a cada filtro)
   const nav = new Chart(document.getElementById("chNav"), {type:"line", data:{labels:[], datasets:ORD.map(n => ({label:n, data:[], borderColor:cor(n), backgroundColor:cor(n), borderWidth:n==="MARK"?2.5:1.5}))},
@@ -174,8 +185,8 @@ carregar("data/historico.json").then(H => {
 
   // período completo com IR (motor completo, não muda com o filtro)
   const M = H.metricas;
-  document.getElementById("perFull").textContent = "De " + dataBR(H.inicio) + " a " + dataBR(H.fim) + ", R$100 mil em cada carteira, vendendo tudo no fim e pagando o IR.";
-  document.getElementById("tbRes").innerHTML = '<thead><tr><th>Carteira</th><th>Valor final líquido</th><th>Retorno ao ano</th><th>Volatilidade</th><th>Pior queda</th><th>Sharpe</th><th>IR pago</th></tr></thead><tbody>' +
+  document.getElementById("perFull").textContent = "De " + dataBR(H.inicio) + " a " + dataBR(H.fim) + ", R$100 mil em cada carteira, vendendo tudo no fim e pagando o IR estimado.";
+  document.getElementById("tbRes").innerHTML = '<thead><tr><th>Carteira</th><th>Valor final líquido</th><th>Retorno ao ano</th><th>Volatilidade</th><th>Pior queda</th><th>Sharpe</th><th>IR pago (estimado)</th></tr></thead><tbody>' +
     ORD.map(n => { const m = M[n]; return '<tr><td><span class="dot" style="background:'+cor(n)+'"></span>'+n+'</td><td>'+reais(m.final_liquido)+'</td><td>'+pct(m.retorno_aa_liquido)+'</td><td>'+pct(m.vol_aa)+'</td><td>'+pct(m.max_queda)+'</td><td>'+(n==="Tesouro Selic"?"–":m.sharpe.toLocaleString("pt-BR",{maximumFractionDigits:2}))+'</td><td>'+reais(m.ir_pago)+'</td></tr>'; }).join("") + '</tbody>';
 });
 </script>
