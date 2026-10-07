@@ -94,3 +94,9 @@ footer{margin-top:56px;color:var(--muted);font-size:13px;border-top:1px solid va
 .filtro-campos input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 #fCap{width:130px}
 .tscroll thead th{position:sticky;top:0;background:var(--surface);z-index:1}
+/* passos numerados */
+.passos{display:grid;gap:14px;margin:16px 0;max-width:80ch}
+.passo{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
+.passo .num{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font:600 16px var(--f-mono);color:var(--fg)}
+.passo h3{margin:4px 0 6px}
+.passo p:last-child{margin-bottom:0}
