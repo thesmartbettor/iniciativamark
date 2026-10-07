@@ -1,0 +1,22 @@
+name: Teste fontes
+on: push
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r scripts/requirements.txt
+      - run: |
+          python - <<'PY'
+          import sys, json, pandas as pd
+          sys.path.insert(0, "scripts")
+          import acompanhamento as A
+          ini = pd.Timestamp("2026-09-01")
+          px = A.baixar_precos(ini); print("PRECOS", px.tail(3).to_string())
+          s = A.baixar_selic(ini, pd.Timestamp("2026-10-07")); print("SELIC", s.tail(3).to_string())
+          sin = {"2026-09": {"bova11": 0.6667}, "2026-10": {"bova11": 0.6667}}
+          v, reb = A.simular(px, s, sin, inicio=ini)
+          print("SIM", v[A.NOMES].tail(2).round(0).to_string())
+          PY
