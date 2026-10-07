@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referências · Iniciativa MARK</title>
+<meta name="description" content="Fontes de dados e leituras usadas na Estratégia MARK.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="site-nav" aria-label="Páginas">
+  <a class="marca" href="./">Iniciativa <b>MARK</b></a>
+  <a class="lk" href="./">Início</a>
+  <a class="lk" href="estrategia.html">Como funciona</a>
+  <a class="lk" href="historico.html">Histórico simulado</a>
+  <a class="lk" href="referencias.html" aria-current="page">Referências</a>
+</nav>
+
+<header class="pg">
+  <div class="eyebrow">Referências</div>
+  <h1>De onde vêm os dados e as ideias</h1>
+</header>
+<h2>Dados</h2>
+<ol class="refs">
+  <li>CVM, Dados Abertos de companhias abertas: DFP (2010-2026) e ITR (2011-2026) para o lucro líquido atribuído aos controladores; Formulário de Referência (FRE) para o número de ações; FCA para os códigos de negociação. <a href="https://dados.cvm.gov.br/dataset/?groups=companhias" target="_blank" rel="noopener">dados.cvm.gov.br</a></li>
+  <li>B3, Séries Históricas COTAHIST: preços e volume negociado de todas as ações, usados para o valor de mercado e para escolher as grandes empresas. <a href="https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/historico/mercado-a-vista/series-historicas/" target="_blank" rel="noopener">b3.com.br · séries históricas</a></li>
+  <li>B3, Ibovespa e índice Small Cap (SMLL): metodologias das carteiras teóricas. <a href="https://www.b3.com.br/pt_br/market-data-e-indices/indices/" target="_blank" rel="noopener">b3.com.br · índices</a></li>
+  <li>Yahoo Finance, pela biblioteca yfinance: preços diários de BOVA11, SMAL11 e Ibovespa (^BVSP), no histórico simulado e no acompanhamento real. <a href="https://github.com/ranaroussi/yfinance" target="_blank" rel="noopener">github.com/ranaroussi/yfinance</a></li>
+  <li>Banco Central do Brasil, Sistema Gerenciador de Séries Temporais (SGS): série 11 (Selic diária) e série 12 (CDI diário). <a href="https://www3.bcb.gov.br/sgspub/" target="_blank" rel="noopener">www3.bcb.gov.br/sgspub</a></li>
+  <li>Tesouro Direto: regras do Tesouro Selic e taxa de custódia da B3 (0,20% ao ano). <a href="https://www.tesourodireto.com.br/" target="_blank" rel="noopener">tesourodireto.com.br</a></li>
+  <li>Receita Federal: tributação de renda variável (15% sobre o ganho em ETF de ações, compensação de prejuízos) e tabela regressiva de renda fixa (Lei 11.033/2004 e IN RFB 1.585/2015).</li>
+</ol>
+<h2>Leituras</h2>
+<ol class="refs">
+  <li>Graham, B. e Dodd, D. (1934). <i>Security Analysis</i>. McGraw-Hill. Origem da ideia de avaliar empresas pelo lucro médio de vários anos, e não só pelo último.</li>
+  <li>Campbell, J. e Shiller, R. (1988). "Stock Prices, Earnings, and Expected Dividends". <i>Journal of Finance</i> 43(3). Mostra que o P/L com lucro médio de vários anos ajuda a prever o retorno dos anos seguintes.</li>
+  <li>Shiller, R. (2000). <i>Irrational Exuberance</i>. Princeton University Press. Popularizou o CAPE, o P/L com lucro médio de 10 anos.</li>
+</ol>
+<h2>Sobre o estudo</h2>
+<div class="prose">
+<p>A Estratégia MARK saiu de uma série de estudos feitos em 2026 com dados públicos da B3, da CVM e do Banco Central. Foram testadas outras ideias (long &amp; short de pares de ações, venda e compra de opções, proteção com puts e uma versão com small caps). A MARK foi a que combinou melhor retorno e risco: a proteção com puts rendeu um pouco mais desde 2017, mas com o dobro da pior queda e quase todo o ganho vindo de um único mês (março de 2020). Por isso o site trata só da MARK.</p>
+</div>
+<footer>
+  <span>Iniciativa MARK · estudo heurístico, não é recomendação de investimento. Nenhum participante do projeto tem certificação para recomendar investimentos.</span>
+</footer>
+</div>
+
+</body>
+</html>
