@@ -30,7 +30,7 @@
 <div class="prose">
 <ol style="padding-left:22px;display:grid;gap:10px">
   <li><b>Quais empresas entram:</b> As grandes empresas da B3, que juntas somam 85% de todo o dinheiro negociado na bolsa a cada trimestre e negociam em pelo menos 95% dos pregões.</li>
-  <li>O modelo pesquisa indicadores de value investing (como o Preço/Lucro - P/L) desse conjunto de empresas. Soma-se o valor de mercado de todas as empresas e divide-se pela soma do lucro de cada uma, usando a média dos últimos 3 anos. A média de vários anos evita que um ano muito bom ou muito ruim engane o sinal. Só entram lucros já divulgados na CVM até a data disponível.</li>
+  <li>O modelo calcula indicadores de value investing desse conjunto de empresas, com base na média dos resultados dos últimos 3 anos. A média de vários anos evita que um ano muito bom ou muito ruim engane o sinal. Só entram resultados já divulgados na CVM até a data disponível.</li>
   <li><b>Caro ou barato?</b> Compara-se os indicadores de hoje com todos os mensais passados desde 2012 e vê em qual quartil do histórico a empresa se encontra. Espera-se que os retornos futuros desse conjunto de empresas quando negociadas abaixo do valor intrínseco seja maior que se compradas quando negociadas acima do seu valor intrínseco.</li>
   <li><b>A alocação.</b> O quartil define quanto vai para o BOVA11. O resto vai para o Tesouro Selic. Um novo cálculo de alocação é feito no 1º pregão de cada mês.</li>
 </ol>
@@ -41,22 +41,15 @@
 <div class="rule" id="regra"></div>
 <p class="meta" id="limites"></p>
 
-<div class="grid2">
-  <div class="panel">
-    <h3 style="margin-top:0">P/L das grandes empresas, mês a mês</h3>
-    <p class="meta">As linhas tracejadas são os limites entre quartis calculados com todo o histórico até hoje.</p>
-    <div class="chartbox sm"><canvas id="chPL" role="img" aria-label="P/L agregado mês a mês"></canvas></div>
-  </div>
-  <div class="panel">
+<div class="panel">
     <h3 style="margin-top:0">Quanto a MARK teve em BOVA11 em cada mês</h3>
     <div class="legend"><span><i class="sw" style="background:var(--s-bova)"></i> BOVA11</span><span><i class="sw" style="background:var(--s-selic)"></i> Tesouro Selic</span></div>
     <div class="chartbox sm"><canvas id="chPeso" role="img" aria-label="Peso em BOVA11 por mês"></canvas></div>
   </div>
-</div>
 
 <h2>Por que funciona (e quando não funciona)</h2>
 <div class="prose">
-<p><b>A ideia:</b> quando a bolsa está barata em relação ao lucro que as empresas costumam gerar, o retorno dos anos seguintes tende a ser maior. Quando está cara, tende a ser menor. É a mesma ideia do P/L de 10 anos de Robert Shiller (CAPE), adaptada para o Brasil com 3 anos de lucro.</p>
+<p><b>A ideia:</b> quando a bolsa está barata em relação ao que as empresas costumam gerar de resultado, o retorno dos anos seguintes tende a ser maior. Quando está cara, tende a ser menor. É uma ideia clássica do value investing, adaptada para o Brasil.</p>
 <p><b>Como protege:</b> quando a bolsa fica cara, a MARK sai do BOVA11. No histórico simulado ela ficou 100% em Tesouro Selic de set/2017 a mar/2020 e por isso não sofreu a queda da Covid. Voltou a comprar com a bolsa barata em abr/2020.</p>
 <p><b>O custo:</b> ela perde altas que acontecem com a bolsa cara. Em 2019 rendeu 5,7%, contra 31,5% do BOVA11. Também pode ficar 100% em bolsa numa queda que começa com a bolsa barata, como em 2024 (-7,9%).</p>
 <p><b>Limitação importante:</b> a regra foi escolhida olhando os mesmos dados do histórico simulado, depois de testar outras variantes. O resultado real a partir de 01/11/2026 é o teste de verdade.</p>
@@ -75,20 +68,13 @@
 <script src="assets/comum.js"></script>
 <script>
 carregar("data/historico.json").then(H => {
-  const S = H.sinal_atual, q = S.quartil, L = S.limites.map(x => x.toLocaleString("pt-BR"));
+  const S = H.sinal_atual, q = S.quartil;
   const pesos = [1, 2/3, 1/3, 0], nomes = ["1º quartil<br>bolsa barata","2º quartil","3º quartil","4º quartil<br>bolsa cara"];
-  const faixa = ["P/L até " + L[0], L[0] + " a " + L[1], L[1] + " a " + L[2], "acima de " + L[2]];
   document.getElementById("regra").innerHTML = pesos.map((p,i) =>
     '<div><div class="stack' + (i+1===q ? ' atual' : '') + '"><span style="flex:' + p + ';background:var(--s-bova)"></span><span style="flex:' + (1-p) + ';background:var(--s-selic)"></span></div>' +
-    '<b>' + pct(p,0) + ' BOVA11</b><span>' + nomes[i] + '</span><span class="meta">' + faixa[i] + '</span></div>').join("");
-  document.getElementById("limites").textContent = "Sinal de " + dataBR(S.data) + ": P/L " + S.pl.toLocaleString("pt-BR") + ", no " + q + "º quartil, " + pct(S.bova,0) + " em BOVA11.";
+    '<b>' + pct(p,0) + ' BOVA11</b><span>' + nomes[i] + '</span></div>').join("");
+  document.getElementById("limites").textContent = "Sinal de " + dataBR(S.data) + ": " + q + "º quartil, " + pct(S.bova,0) + " em BOVA11.";
   const P = H.pesos, lbl = P.meses.map(mesC);
-  const lim = (v, t) => ({label:t, data:lbl.map(() => v), borderColor:css("--muted"), borderDash:[4,4], borderWidth:1, pointRadius:0});
-  new Chart(document.getElementById("chPL"), {type:"line",
-    data:{labels:lbl, datasets:[{label:"P/L", data:P.pl, borderColor:cor("MARK"), backgroundColor:cor("MARK")},
-      lim(S.limites[0],"limite 1º/2º"), lim(S.limites[1],"mediana"), lim(S.limites[2],"limite 3º/4º")]},
-    options:{scales:{x:{ticks:{maxTicksLimit:8}, grid:{display:false}}, y:{ticks:{callback:v=>v.toLocaleString("pt-BR")}}},
-      plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+": "+c.parsed.y.toLocaleString("pt-BR",{maximumFractionDigits:2})}}}}});
   new Chart(document.getElementById("chPeso"), {type:"bar",
     data:{labels:lbl, datasets:[{label:"BOVA11", data:P.bova, backgroundColor:css("--s-bova"), borderWidth:0, barPercentage:1, categoryPercentage:1},
       {label:"Tesouro Selic", data:P.bova.map(x=>100-x), backgroundColor:css("--s-selic"), borderWidth:0, barPercentage:1, categoryPercentage:1}]},

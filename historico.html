@@ -166,9 +166,9 @@ carregar("data/historico.json").then(H => {
       }
     }
     const QL = ["","1º (barata)","2º","3º","4º (cara)"];
-    document.getElementById("tbMes").innerHTML = '<thead><tr><th>Mês</th><th>P/L</th><th>Quartil</th><th>Em BOVA11</th><th>Em Selic</th>' + ORD.map(n=>'<th>Retorno '+n+'</th>').join("") + '</tr></thead><tbody>' +
+    document.getElementById("tbMes").innerHTML = '<thead><tr><th>Mês</th><th>Quartil</th><th>Em BOVA11</th><th>Em Selic</th>' + ORD.map(n=>'<th>Retorno '+n+'</th>').join("") + '</tr></thead><tbody>' +
       meses.reverse().map(([mes, ret]) => { const k = pos[mes], b = k === undefined ? null : P.bova[k];
-        return '<tr><td>'+mesBR(mes)+'</td><td>'+(b===null?"–":P.pl[k].toLocaleString("pt-BR"))+'</td><td>'+(b===null?"–":QL[P.q[k]])+'</td><td><b>'+(b===null?"–":b+"%")+'</b></td><td>'+(b===null?"–":(100-b)+"%")+'</td>' +
+        return '<tr><td>'+mesBR(mes)+'</td><td>'+(b===null?"–":QL[P.q[k]])+'</td><td><b>'+(b===null?"–":b+"%")+'</b></td><td>'+(b===null?"–":(100-b)+"%")+'</td>' +
           ORD.map(n => { const x = ret[n], c = n==="Tesouro Selic" ? "" : (x>=ret["Tesouro Selic"]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>'; }).join("") + '</tbody>';
   }
   function atalho(anos){

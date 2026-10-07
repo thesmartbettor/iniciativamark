@@ -29,7 +29,7 @@
 <header class="pg">
   <div class="eyebrow">Estratégia MARK</div>
   <h1>BOVA11 quando a bolsa está barata, Tesouro Selic quando está cara</h1>
-  <p class="lead prose">Uma vez por mês, o algoritmo mede se as ações das grandes empresas brasileiras estão caras ou baratas pelo preço sobre lucro (P/L) e decide quanto fica em BOVA11 e quanto fica em Tesouro Selic. <a href="metodo.html">Veja o método</a>.</p>
+  <p class="lead prose">Uma vez por mês, o algoritmo mede se as ações das grandes empresas brasileiras estão caras ou baratas e decide quanto fica em BOVA11 e quanto fica em Tesouro Selic. <a href="metodo.html">Veja o método</a>.</p>
 </header>
 
 <h2 id="aloc-titulo">Alocação do mês</h2>
@@ -100,7 +100,7 @@ function mostrarAlocacao(S){
     '<div><span><span class="dot" style="background:var(--s-selic)"></span>Tesouro Selic</span><b>'+pct(r,0)+'</b></div>';
   const ord = ["","1º","2º","3º","4º"][s.quartil];
   const leitura = ["","bolsa barata","bolsa um pouco barata","bolsa um pouco cara","bolsa cara"][s.quartil];
-  document.getElementById("aloc-sinal").innerHTML = "P/L das grandes empresas: <b>" + s.pl.toLocaleString("pt-BR") + "</b>, no " + ord + " quartil do histórico (" + leitura + "). Calculado em " + dataBR(s.calculado_em) + ".";
+  document.getElementById("aloc-sinal").innerHTML = "Bolsa no <b>" + ord + " quartil</b> do histórico (" + leitura + "). Calculado em " + dataBR(s.calculado_em) + ".";
 }
 
 function mostrarReal(A){
