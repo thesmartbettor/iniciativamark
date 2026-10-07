@@ -93,3 +93,4 @@ footer{margin-top:56px;color:var(--muted);font-size:13px;border-top:1px solid va
 .filtro-campos input{font:500 14px var(--f-mono);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 10px;min-width:0;color-scheme:inherit}
 .filtro-campos input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 #fCap{width:130px}
+.tscroll thead th{position:sticky;top:0;background:var(--surface);z-index:1}

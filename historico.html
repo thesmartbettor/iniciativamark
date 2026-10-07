@@ -70,6 +70,9 @@
 <h2>Ano a ano</h2>
 <p class="meta prose">Retorno de cada ano dentro do período escolhido. Verde: acima do Tesouro Selic do mesmo ano; vermelho: abaixo. O primeiro e o último ano podem estar incompletos.</p>
 <div class="tscroll"><table id="tbAno"></table></div>
+<h2>Mês a mês</h2>
+<p class="meta prose">Alocação que a MARK calculou no 1º pregão de cada mês e o retorno de cada carteira naquele mês, dentro do período escolhido. Mais recente primeiro.</p>
+<div class="tscroll" style="max-height:560px;overflow-y:auto"><table id="tbMes"></table></div>
 <h2>Período completo, depois do IR</h2>
 <p class="meta prose" id="perFull"></p>
 <div class="tscroll"><table id="tbRes"></table></div>
@@ -141,6 +144,21 @@ carregar("data/historico.json").then(H => {
     }
     document.getElementById("tbAno").innerHTML = '<thead><tr><th>Ano</th>' + ORD.map(n=>'<th>'+n+'</th>').join("") + '</tr></thead><tbody>' +
       linhas.map(([ano, ret]) => '<tr><td>'+ano+'</td>' + ORD.map(n => { const x = ret[n], c = n==="Tesouro Selic" ? "" : (x>=ret["Tesouro Selic"]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>').join("") + '</tbody>';
+    // mês a mês com a alocação calculada
+    const P = H.pesos, pos = {}; P.meses.forEach((m,k) => pos[m] = k);
+    const meses = []; let b0 = 0;
+    for (let k = 1; k <= datas.length; k++) {
+      if (k === datas.length || datas[k].slice(0,7) !== datas[k-1].slice(0,7)) {
+        const mes = datas[k-1].slice(0,7), ret = {};
+        ORD.forEach(n => ret[n] = (R[n].v[k-1] / R[n].v[b0] - 1) * 100);
+        meses.push([mes, ret]); b0 = k-1;
+      }
+    }
+    const QL = ["","1º (barata)","2º","3º","4º (cara)"];
+    document.getElementById("tbMes").innerHTML = '<thead><tr><th>Mês</th><th>P/L</th><th>Quartil</th><th>Em BOVA11</th><th>Em Selic</th>' + ORD.map(n=>'<th>Retorno '+n+'</th>').join("") + '</tr></thead><tbody>' +
+      meses.reverse().map(([mes, ret]) => { const k = pos[mes], b = k === undefined ? null : P.bova[k];
+        return '<tr><td>'+mesBR(mes)+'</td><td>'+(b===null?"–":P.pl[k].toLocaleString("pt-BR"))+'</td><td>'+(b===null?"–":QL[P.q[k]])+'</td><td><b>'+(b===null?"–":b+"%")+'</b></td><td>'+(b===null?"–":(100-b)+"%")+'</td>' +
+          ORD.map(n => { const x = ret[n], c = n==="Tesouro Selic" ? "" : (x>=ret["Tesouro Selic"]?"pos":"neg"); return '<td class="'+c+'">'+pp(x)+'</td>'; }).join("") + '</tr>'; }).join("") + '</tbody>';
   }
   function atalho(anos){
     document.querySelectorAll("#atalhos .chip").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.anos === anos)));
