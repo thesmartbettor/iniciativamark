@@ -85,41 +85,12 @@
 </div>
 
 <h2>Calculadora do mês</h2>
-<div class="panel calc">
-  <p class="meta" id="cAloc" style="margin-top:0">Carregando a alocação do mês…</p>
-  <div class="filtro-campos">
-    <label>Valor a investir (R$) <input type="text" inputmode="numeric" id="cValor" value="10.000"></label>
-    <label>Preço de uma cota de BOVA11 (R$) <input type="text" inputmode="decimal" id="cPreco" placeholder="ex.: 150,00"></label>
-  </div>
-  <div class="kpis" id="cRes"></div>
-  <p class="meta" style="margin:0">Arredonda para baixo o número de cotas, porque não dá para comprar fração de cota de BOVA11. O que sobra vai para o Tesouro Selic. Não inclui custos nem impostos.</p>
-</div>
+<div class="panel calc" id="calc"></div>
 <footer>
   <span>Iniciativa MARK · estudo heurístico, não é recomendação de investimento. Nenhum participante do projeto tem certificação para recomendar investimentos.</span>
 </footer>
 </div>
 <script src="assets/comum.js"></script>
-<script>
-const num = s => +String(s).replace(/\./g,"").replace(",",".").replace(/[^0-9.]/g,"");
-carregar("data/sinais.json").then(S => {
-  const meses = Object.keys(S.meses).sort(), k = meses[meses.length-1], b = S.meses[k].bova11;
-  document.getElementById("cAloc").innerHTML = "Alocação vigente em " + mesBR(k) + ": <b>" + pct(b,0) + " em BOVA11</b> e <b>" + pct(1-b,0) + " em Tesouro Selic</b>.";
-  const V = document.getElementById("cValor"), P = document.getElementById("cPreco");
-  function calc(){
-    const v = num(V.value), p = num(P.value), el = document.getElementById("cRes");
-    if (!(v > 0)) { el.innerHTML = ""; return; }
-    const alvo = v * b;
-    let html = '<div class="kpi"><span class="nome"><span class="dot" style="background:var(--s-bova)"></span>BOVA11</span><b>' + reais(alvo) + '</b><span>' + pct(b,0) + ' do valor</span></div>';
-    let selic = v - alvo;
-    if (p > 0) {
-      const cotas = Math.floor(alvo / p), gasto = cotas * p; selic = v - gasto;
-      html = '<div class="kpi"><span class="nome"><span class="dot" style="background:var(--s-bova)"></span>BOVA11</span><b>' + nf0.format(cotas) + ' cotas</b><span>cerca de ' + reais(gasto) + '</span></div>';
-    } else html = html.replace('</span></div>', ' · informe o preço da cota para ver quantas comprar</span></div>');
-    html += '<div class="kpi"><span class="nome"><span class="dot" style="background:var(--s-selic)"></span>Tesouro Selic</span><b>' + reais(selic) + '</b><span>o restante</span></div>';
-    el.innerHTML = html;
-  }
-  V.oninput = calc; P.oninput = calc; calc();
-});
-</script>
+<script>calculadora(document.getElementById("calc"));</script>
 </body>
 </html>

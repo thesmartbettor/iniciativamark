@@ -53,6 +53,10 @@
   </div>
 </div>
 
+<h2>Calculadora</h2>
+<p class="prose">Informe quanto você tem para investir e veja quanto vai para o Tesouro Selic e quantas cotas de BOVA11 comprar com a alocação deste mês.</p>
+<div class="panel" id="calc"></div>
+
 <h2>Resultado real</h2>
 <p class="prose">Desde 01/11/2026, a carteira MARK é acompanhada de verdade, com R$100 mil seguindo exatamente o sinal de cada mês, e comparada com o Tesouro Selic, o Ibovespa e o SMAL11. Para ver como a estratégia teria se saído no passado, veja o <a href="historico.html">histórico simulado</a>.</p>
 <div id="real"></div>
@@ -66,6 +70,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="assets/comum.js"></script>
 <script>
+calculadora(document.getElementById("calc"));
 const NOMES = ["MARK","Tesouro Selic","Ibovespa","SMAL11"];
 
 /* contagem regressiva até 00h do dia 1º do próximo mês, horário de Brasília (UTC-3) */

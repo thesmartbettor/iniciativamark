@@ -95,14 +95,30 @@ def montar_json(v, reb, agora):
             "rebalanceamentos": reb}
 
 
+def salvar_preco(px=None):
+    """Último fechamento do BOVA11 para a calculadora do site (data/preco_bova11.json)."""
+    try:
+        if px is None:
+            hoje = pd.Timestamp.now(tz="America/Sao_Paulo").tz_localize(None).normalize()
+            px = baixar_precos(hoje)
+        b = px["BOVA11"].dropna()
+        out = {"data": str(b.index[-1].date()), "preco": round(float(b.iloc[-1]), 2)}
+        (RAIZ / "data/preco_bova11.json").write_text(json.dumps(out))
+        print("BOVA11", out)
+    except Exception as e:
+        print("Aviso: preço do BOVA11 indisponível:", e, file=sys.stderr)
+
+
 def main():
     sinais = json.loads((RAIZ / "data/sinais.json").read_text())["meses"]
     hoje = pd.Timestamp.now(tz="America/Sao_Paulo").tz_localize(None).normalize()
     agora = dt.datetime.now(dt.timezone(dt.timedelta(hours=-3))).strftime("%Y-%m-%d %H:%M")
     if hoje < INICIO:
         v, reb = None, []
+        salvar_preco()
     else:
         px = baixar_precos(INICIO)
+        salvar_preco(px)
         try:
             selic = baixar_selic(INICIO, hoje)
         except Exception as e:  # BCB fora do ar: mantém a última taxa conhecida do arquivo anterior

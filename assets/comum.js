@@ -36,3 +36,28 @@ function legenda(el, chart, nomes){
   });
 }
 baseChart();
+
+/* Calculadora: montante -> cotas de BOVA11 (pela alocação vigente) e o restante em Tesouro Selic */
+const numBR = s => +String(s).replace(/\./g,"").replace(",",".").replace(/[^0-9.]/g,"");
+function calculadora(el){
+  el.innerHTML = '<p class="meta" data-c="aloc" style="margin-top:0">Carregando a alocação do mês…</p>' +
+    '<div class="filtro-campos"><label>Quanto você tem para investir (R$) <input type="text" inputmode="numeric" data-c="valor" value="10.000"></label>' +
+    '<label>Preço de uma cota de BOVA11 (R$) <input type="text" inputmode="decimal" data-c="preco" placeholder="ex.: 150,00"></label></div>' +
+    '<p class="meta" data-c="fonte" style="margin:8px 0 0"></p><div class="kpis" data-c="res"></div>' +
+    '<p class="meta" style="margin:0">Arredonda para baixo o número de cotas, porque não dá para comprar fração de cota de BOVA11. O que sobra vai para o Tesouro Selic. Não inclui custos nem impostos. Não é recomendação de investimento.</p>';
+  const q = k => el.querySelector('[data-c="'+k+'"]'), V = q("valor"), P = q("preco");
+  Promise.all([carregar("data/sinais.json"), carregar("data/preco_bova11.json").catch(() => null)]).then(([S, PR]) => {
+    const meses = Object.keys(S.meses).sort(), k = meses[meses.length-1], b = S.meses[k].bova11;
+    q("aloc").innerHTML = "Alocação vigente em " + mesBR(k) + ": <b>" + pct(b,0) + " em BOVA11</b> e <b>" + pct(1-b,0) + " em Tesouro Selic</b>.";
+    if (PR && PR.preco) { P.value = PR.preco.toLocaleString("pt-BR",{minimumFractionDigits:2}); q("fonte").textContent = "Preço de fechamento do BOVA11 em " + dataBR(PR.data) + ". Troque pelo preço que aparece no seu aplicativo na hora da compra."; }
+    function calc(){
+      const v = numBR(V.value), p = numBR(P.value), res = q("res");
+      if (!(v > 0)) { res.innerHTML = ""; return; }
+      const alvo = v * b, cotas = p > 0 ? Math.floor(alvo / p) : null, emBova = cotas === null ? alvo : cotas * p, selic = v - emBova;
+      res.innerHTML =
+        '<div class="kpi"><span class="nome"><span class="dot" style="background:var(--s-bova)"></span>BOVA11</span><b>' + (cotas === null ? "–" : nf0.format(cotas) + " cotas") + '</b><span>' + (cotas === null ? "informe o preço da cota" : "cerca de " + reais(emBova)) + '</span></div>' +
+        '<div class="kpi"><span class="nome"><span class="dot" style="background:var(--s-selic)"></span>Tesouro Selic</span><b>' + reais(selic) + '</b><span>' + pct(selic/v,0) + ' do total</span></div>';
+    }
+    V.oninput = calc; P.oninput = calc; calc();
+  });
+}
