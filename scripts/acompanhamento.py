@@ -62,8 +62,9 @@ def simular(px, selic, sinais, inicio=INICIO, capital=CAPITAL):
             s = sinais.get(mes)
             peso = s["bova11"] if s else peso_ant
             total = capital if cotas is None else cotas * px.BOVA11[d] + rf
-            if peso is None:
-                raise SystemExit(f"Sem sinal para {mes} em data/sinais.json")
+            if peso is None:  # 1º mês ainda sem sinal (sai à noite no 1º pregão): fica "aguardando"
+                print(f"Aviso: ainda sem sinal para {mes} em data/sinais.json", file=sys.stderr)
+                break
             cotas = total * peso / px.BOVA11[d]
             rf = total - cotas * px.BOVA11[d]
             reb.append({"data": str(d.date()), "mes": mes, "bova11": round(peso, 4), "sinal_do_mes": bool(s),
@@ -72,6 +73,8 @@ def simular(px, selic, sinais, inicio=INICIO, capital=CAPITAL):
         val[d] = {"MARK": cotas * px.BOVA11[d] + rf, "Tesouro Selic": bench["Tesouro Selic"],
                   "Ibovespa": capital * px.IBOV[d] / px.IBOV.iloc[0], "SMAL11": capital * px.SMAL11[d] / px.SMAL11.iloc[0],
                   "_cotas": cotas, "_rf": rf, "_bova": px.BOVA11[d]}
+    if not val:
+        return None, []
     return pd.DataFrame(val).T, reb
 
 

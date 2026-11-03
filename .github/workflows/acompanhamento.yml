@@ -3,10 +3,17 @@ name: Acompanhamento MARK
 on:
   schedule:
     - cron: "30 21 * * 1-5"   # 18h30 em Brasília, depois do fechamento da B3
+  push:                       # sinal novo publicado pelo PC (19h do 1º pregão): recalcula na hora
+    branches: [main]
+    paths: [data/sinais.json]
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: acompanhamento
+  cancel-in-progress: false
 
 jobs:
   atualizar:
@@ -24,4 +31,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/
           git diff --cached --quiet || git commit -m "Acompanhamento MARK $(TZ=America/Sao_Paulo date +%F)"
+          git pull --rebase origin main
           git push
