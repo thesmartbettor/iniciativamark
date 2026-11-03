@@ -6,6 +6,12 @@
       "quartil": 2,
       "bova11": 0.6667,
       "selic": 0.3333
+    },
+    "2026-11": {
+      "calculado_em": "2026-11-03",
+      "quartil": 1,
+      "bova11": 1.0,
+      "selic": 0.0
     }
   }
 }
