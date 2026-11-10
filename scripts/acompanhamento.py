@@ -22,6 +22,7 @@ def baixar_precos(inicio):
                      auto_adjust=False, progress=False)["Close"]
     df = df.rename(columns={v: k for k, v in tick.items()})
     df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
+    df = df[df.index.dayofweek < 5]  # o Yahoo às vezes devolve uma linha "fantasma" de sábado/domingo
     return df[list(tick)].dropna(how="all")
 
 
