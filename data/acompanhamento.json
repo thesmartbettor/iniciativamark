@@ -1,7 +1,7 @@
 {
  "inicio": "2026-11-01",
  "capital": 100000.0,
- "atualizado_em": "2026-11-06 22:02",
+ "atualizado_em": "2026-11-10 00:41",
  "nota": "Valores brutos, antes de imposto de renda e custos de corretagem e custódia.",
  "status": "ativo",
  "ultimo_pregao": "2026-11-06",
@@ -28,7 +28,7 @@
    100000.0,
    101229.39,
    100400.53,
-   101793.92
+   101794.25
   ],
   "SMAL11": [
    100000.0,
