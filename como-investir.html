@@ -47,7 +47,7 @@
   </div></div>
   <div class="passo"><span class="num">3</span><div>
     <h3>Só então, invista para o longo prazo</h3>
-    <p>Use na MARK apenas dinheiro que você não vai precisar por vários anos. Em alguns meses ela fica 100% em bolsa e pode cair bastante: no histórico simulado, a pior queda foi de 23,7%. Quem precisa do dinheiro no meio de uma queda acaba vendendo no pior momento.</p>
+    <p>Use na MARK apenas dinheiro que você não vai precisar por vários anos. Em alguns meses ela fica 100% em bolsa e pode cair bastante: no histórico simulado, a pior queda foi de <span id="pior-queda">23,7%</span>. Quem precisa do dinheiro no meio de uma queda acaba vendendo no pior momento.</p>
   </div></div>
 </div>
 
@@ -91,6 +91,12 @@
 </footer>
 </div>
 <script src="assets/comum.js"></script>
-<script>calculadora(document.getElementById("calc"));</script>
+<script>
+calculadora(document.getElementById("calc"));
+carregar("data/historico.json").then(H => {  // pior queda do histórico simulado, sempre atualizada
+  const q = H.metricas && H.metricas.MARK && H.metricas.MARK.max_queda;
+  if(typeof q === "number") document.getElementById("pior-queda").textContent = Math.abs(q*100).toFixed(1).replace(".",",") + "%";
+}).catch(() => {});
+</script>
 </body>
 </html>

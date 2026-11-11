@@ -73,11 +73,21 @@
 calculadora(document.getElementById("calc"));
 const NOMES = ["MARK","Tesouro Selic","Ibovespa","SMAL11"];
 
-/* contagem regressiva até 00h do dia 1º do próximo mês, horário de Brasília (UTC-3) */
+/* contagem regressiva até o 1º pregão do mês, às 19h de Brasília (UTC-3), quando o sinal costuma sair depois do fechamento */
+const FERIADOS = ["01-01","04-21","05-01","09-07","10-12","11-02","11-15","11-20","12-25"];  // feriados nacionais fixos
+function primeiroPregao(y, m){                                     // m: 0-11 (12 vira janeiro do ano seguinte)
+  if(m > 11){ y += 1; m -= 12; }
+  for(let d = 1; ; d++){
+    const dt = new Date(Date.UTC(y, m, d)), dw = dt.getUTCDay();
+    const md = String(m+1).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+    if(dw !== 0 && dw !== 6 && !FERIADOS.includes(md)) return new Date(Date.UTC(y, m, d, 22, 0, 0));  // 19h de Brasília = 22h UTC
+  }
+}
 function proximaAtualizacao(agora){
   const br = new Date(agora.getTime() - 3*3600e3);              // relógio de Brasília
   const y = br.getUTCFullYear(), m = br.getUTCMonth();
-  return new Date(Date.UTC(y, m+1, 1, 3, 0, 0));                  // 00h de Brasília = 03h UTC
+  const deste = primeiroPregao(y, m);
+  return agora < deste ? deste : primeiroPregao(y, m+1);
 }
 function relogio(){
   const agora = new Date(), alvo = proximaAtualizacao(agora);
@@ -88,7 +98,8 @@ function relogio(){
   document.getElementById("cd-m").textContent = String(mi).padStart(2,"0");
   document.getElementById("cd-s").textContent = String(s).padStart(2,"0");
   const br = new Date(alvo.getTime() - 3*3600e3);
-  document.getElementById("prox-data").textContent = "01/" + String(br.getUTCMonth()+1).padStart(2,"0") + "/" + br.getUTCFullYear() + ", às 00h de Brasília";
+  document.getElementById("prox-data").textContent = "1º pregão de " + MESES[br.getUTCMonth()] + " (" + String(br.getUTCDate()).padStart(2,"0") + "/" +
+    String(br.getUTCMonth()+1).padStart(2,"0") + "/" + br.getUTCFullYear() + "), depois do fechamento: o sinal sai até as 19h de Brasília";
 }
 relogio(); setInterval(relogio, 1000);
 
