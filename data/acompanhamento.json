@@ -1,7 +1,7 @@
 {
  "inicio": "2026-11-01",
  "capital": 100000.0,
- "atualizado_em": "2026-11-11 16:14",
+ "atualizado_em": "2026-11-11 23:22",
  "nota": "Valores brutos, antes de imposto de renda e custos de corretagem e custódia.",
  "status": "ativo",
  "ultimo_pregao": "2026-11-11",
@@ -22,7 +22,7 @@
    101791.3,
    104085.64,
    103582.61,
-   104036.56
+   103797.31
   ],
   "Tesouro Selic": [
    100000.0,
@@ -40,7 +40,7 @@
    101794.25,
    104051.86,
    103508.75,
-   104120.67
+   103945.8
   ],
   "SMAL11": [
    100000.0,
@@ -49,7 +49,7 @@
    106230.84,
    109220.32,
    107654.4,
-   109975.91
+   109559.79
   ]
  },
  "mensal": {
@@ -58,23 +58,23 @@
   ],
   "series": {
    "MARK": [
-    4.04
+    3.8
    ],
    "Tesouro Selic": [
     0.31
    ],
    "Ibovespa": [
-    4.12
+    3.95
    ],
    "SMAL11": [
-    9.98
+    9.56
    ]
   }
  },
  "posicao": {
   "bova11_cotas": 613.4593,
-  "bova11_preco": 169.59,
-  "bova11_valor": 104036.56,
+  "bova11_preco": 169.2,
+  "bova11_valor": 103797.31,
   "selic_valor": 0.0
  },
  "rebalanceamentos": [
